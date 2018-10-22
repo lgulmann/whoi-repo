@@ -7,22 +7,94 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+```{r}
+# install and load tidyverse package
+##install.packages('tidyverse')
+library(tidyverse)
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+#National Parks in California
+ca <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/ca.csv") 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+#Acadia National Park
+acadia <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/acadia.csv")
 
-```{r cars}
-summary(cars)
+#Southeast US National Parks
+se <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/se.csv")
+
+#2016 Visitation for all Pacific West National Parks
+visit_16 <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/visit_16.csv")
+
+#All Nationally designated sites in Massachusetts
+mass <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/mass.csv")
+
 ```
 
-## Including Plots
+Start with the California ('ca') dataset
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+head(ca)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+ggplot(data = ca) +
+  geom_point(aes(x = year, y = visitors))
+```
+
+
+```{r}
+ggplot(data = ca) +
+  geom_point(aes(x = year, y = visitors, color = park_name))
+```
+
+
+```{r}
+ggplot(data = ca) +
+  geom_point(aes(x = year, y = visitors, color = park_name)) + 
+  labs(x = "Year",
+       y = "Visitation",
+       title = "California National Park Visitation") +
+  theme_bw() + #this utilized a diffent background theme
+  theme(legend.title = element_blank()) #this removed the legend
+```
+
+```{r}
+ggplot(data = se) + 
+  geom_jitter(aes(x = park_name, y = visitors, color = park_name), 
+              width = 0.1, 
+              alpha = 0.4) +
+  coord_flip() +
+  theme(legend.position = "none") 
+```
+
+```{r}
+head(se)
+```
+
+```{r}
+ggplot(data = se) + 
+  geom_point(aes(x = park_name, y = visitors, color = state), 
+              width = 0.1, 
+              alpha = 0.4) +
+  coord_flip() +
+  theme(legend.position = "none") 
+```
+
+
+```{r}
+ggplot(data = se) + 
+  geom_point(aes(x = park_name, y = visitors, color = state)) 
+```
+
+
+
+```{r}
+ggplot(data = se) + 
+  geom_point(aes(x = year, y = visitors, color = state)) +
+  theme_minimal() +
+  xlab("Year")+ 
+  ylab("Visitation") +
+  ggtitle("Visitation in SE Region") +
+  theme(legend.title = element_blank(),
+        axis.text.x = element_text(angle = 45, size = 14))
+```
