@@ -1,0 +1,249 @@
+---
+title: "Graphics with ggplot2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# install and load tidyverse package
+##install.packages('tidyverse')
+library(tidyverse)
+
+#National Parks in California
+ca <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/ca.csv") 
+
+#Acadia National Park
+acadia <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/acadia.csv")
+
+#Southeast US National Parks
+se <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/se.csv")
+
+#2016 Visitation for all Pacific West National Parks
+visit_16 <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/visit_16.csv")
+
+#All Nationally designated sites in Massachusetts
+mass <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/mass.csv")
+
+```
+
+Start with the California ('ca') dataset
+
+```{r}
+head(ca)
+```
+
+
+```{r}
+ggplot(data = ca) +
+  geom_point(aes(x = year, y = visitors))
+```
+
+
+```{r}
+ggplot(data = ca) +
+  geom_point(aes(x = year, y = visitors, color = park_name))
+```
+
+
+```{r}
+ggplot(data = ca) +
+  geom_point(aes(x = year, y = visitors, color = park_name)) + 
+  labs(x = "Year",
+       y = "Visitation",
+       title = "California National Park Visitation") +
+  theme_bw() + #this utilized a diffent background theme
+  theme(legend.title = element_blank()) #this removed the legend
+```
+
+```{r}
+ggplot(data = se) + 
+  geom_jitter(aes(x = park_name, y = visitors, color = park_name), 
+              width = 0.1, 
+              alpha = 0.4) +
+  coord_flip() +
+  theme(legend.position = "none") 
+```
+
+```{r}
+head(se)
+```
+
+```{r}
+ggplot(data = se) + 
+  geom_point(aes(x = park_name, y = visitors, color = state), 
+              width = 0.1, 
+              alpha = 0.4) +
+  coord_flip() +
+  theme(legend.position = "none") 
+```
+
+
+```{r}
+ggplot(data = se) + 
+  geom_point(aes(x = park_name, y = visitors, color = state)) 
+```
+
+
+
+```{r}
+ggplot(data = se) + 
+  geom_point(aes(x = year, y = visitors, color = state)) +
+  theme_minimal() +
+  xlab("Year")+ 
+  ylab("Visitation") +
+  ggtitle("Visitation in SE Region") +
+  theme(legend.title = element_blank(),
+        axis.text.x = element_text(angle = 45, size = 14))
+```
+
+
+
+```{r}
+ggplot(data = se) + 
+  geom_jitter(aes(x = park_name, y = visitors))
+```
+
+
+
+```{r}
+ggplot(data = se) + 
+  geom_point(aes(x = park_name, y = visitors, color = state), 
+              width = 0.1, 
+              alpha = 0.4) +
+  coord_flip() +
+  theme(legend.position = "none") 
+```
+
+
+```{r}
+ggplot(data = acadia) + 
+  geom_point(aes(x = year, y = visitors)) +
+  geom_line(aes(x = year, y = visitors)) +
+  geom_smooth(aes(x = year, y = visitors))
+```
+
+```{r}
+ggplot(data = visit_16, aes(x = state, y = visitors, fill = park_name)) + 
+  geom_bar(stat = "identity", position = "dodge")
+
+```
+
+#Save a ggplot
+
+```{r}
+myplot <- ggplot(data = visit_16, aes(x = state, y = visitors, fill = park_name)) + 
+  geom_bar(stat = "identity", position = "dodge")
+
+myplot
+
+ggsave(filename = "myplot.png", myplot)
+
+```
+
+
+
+
+```{r}
+
+library(tidyverse)     
+
+## install.packages("tidyverse")
+
+```
+
+
+```{r}
+gapminder <- readr::read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder.csv')
+```
+
+
+```{r}
+## load libraries
+library(tidyverse) ## install.packages('tidyverse')
+
+## read in data
+gapminder <- readr::read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder.csv')
+
+## summarize
+gap_max_gdp <- gapminder %>% 
+  dplyr::select(-continent, -lifeExp) %>% # or select(country, year, pop, gdpPercap)
+  dplyr::group_by(country) %>%
+  dplyr::mutate(gdp = pop * gdpPercap) %>%
+  dplyr::summarize(max_gdp = max(gdp)) %>%
+  dplyr::ungroup() 
+
+```
+## summarize
+gap_max_gdp <- gapminder %>% 
+  dplyr::select(-continent, -lifeExp) %>% # or select(country, year, pop, gdpPercap)
+  dplyr::group_by(country) %>%
+  dplyr::mutate(gdp = pop * gdpPercap) %>%
+  dplyr::summarize(max_gdp = max(gdp)) %>%
+  dplyr::ungroup() 
+  
+```{r}
+ ## load libraries
+library(tidyverse) ## install.packages('tidyverse')
+
+## read in data
+gapminder <- readr::read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder.csv') 
+
+## summarize
+gap_max_gdp <- gapminder %>% 
+  dplyr::select(-continent, -lifeExp) %>% # or select(country, year, pop, gdpPercap)
+  dplyr::group_by(country) %>%
+  dplyr::mutate(gdp = pop * gdpPercap) %>%
+  dplyr::summarize(max_gdp = max(gdp)) %>%
+  dplyr::ungroup() 
+
+```
+  
+  
+```{r}
+## read in the data. (same URL as yesterday, with co2.csv instead of gapminder.csv)
+
+co2 <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/co2.csv")
+```
+```{r}
+## explore
+## explore
+co2 %>% head()
+co2 %>% dim() 
+
+## create new variable that is only 2007 data
+gap_2007 <- gapminder %>%
+  filter(year == 2007) 
+gap_2007 %>% dim() # 142  
+
+## left_join gap_2007 to co2
+lj <- left_join(gap_2007, co2, by = "country")
+
+
+## right_join gap_2007 and co2
+rj <- right_join(gap_2007, co2, by = "country")
+      
+
+
+```
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
