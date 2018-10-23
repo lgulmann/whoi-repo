@@ -56,21 +56,51 @@ gap_long <- gap_wide %>%
 
 ##plot long data
 
+
+## New Plot 
+first step filter for just lifeexpectancy
+select years greater than 1980 with > 1980
+group_by continent
+
 ```{r}
-canada_df <- gap_long %>%
+continents <- gap_long %>% 
   filter(obs_type == "lifeExp",
-         country == "Canada")
+         year >1980) %>% 
+  group_by(continent, year) %>% 
+  summarize(mean_le = mean(obs_values))
 
-ggplot(canada_df, aes(x = year, y = obs_values)) +
-  geom_line()
-
-life_df <- gap_long %>%
-  filter(obs_type == "lifeExp",
-         continent == "Americas")
-
-ggplot(life_df, aes(x = year, y = obs_values, color = country)) +
-  geom_line()
-
+#plot
+ggplot(data = continents, aes(x = year, y = mean_le, color = continents)) +
+  geom_line() +
+  labs(x = "Year",
+       y = "Age (boo)", 
+       title = "Mean Life Expectancy") +
+  theme_bw()
 ```
 
+  ## spread()
+  
+```{r}
+gap_normal <- gap_long %>% 
+  spread(key = obs_type,
+         value = obs_values)
+  
+```
 
+## Testing Convert “gap_long” all the way back to gap_wide. Hint: you’ll need to create appropriate labels for all our new variables (time*metric combinations) with the opposite of separate: tidyr::unite(). spread(key = var_names, value = obs_values)
+   
+   
+```{r}
+gap_wide_new <- gap_long %>% 
+  unite(col = var_name, obs_type, year, sep = "_") 
+  spread(key = var_name, 
+         value = obs_values)
+  
+```      
+
+```{r}
+gap_wide_new <- gap_long %>% 
+  unite(col = var_name, obs_type, year, sep = "_" %>% 
+          ```
+
+  
